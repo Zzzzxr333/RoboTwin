@@ -73,8 +73,17 @@ class place_bread_basket(Base_Task):
                     break
             if try_num == -1:
                 break
-            id_list = [0, 1, 3, 5, 6]
-            self.bread_id.append(np.random.choice(id_list))
+            
+            square_ids = [1, 5, 6]
+            other_ids = [0, 3]
+
+            if np.random.rand() < 0.95:
+                bread_id = np.random.choice(square_ids)
+            else:
+                bread_id = np.random.choice(other_ids)
+
+            self.bread_id.append(bread_id)
+
             bread_actor = create_actor(
                 scene=self,
                 pose=rand_pos,
