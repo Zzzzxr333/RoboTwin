@@ -28,6 +28,14 @@ git -C /root/autodl-tmp/RoboTwin/XPolicyLab restore --source HEAD --worktree .
 if [[ ! -e /root/autodl-tmp/RoboTwin/XPolicyLab/policy/Pi_05/openpi/.venv ]]; then
   ln -s /opt/pi05/.venv /root/autodl-tmp/RoboTwin/XPolicyLab/policy/Pi_05/openpi/.venv
 fi
+# Keep a new host's driver descriptors; use saved descriptors only when absent.
+mkdir -p /etc/vulkan/icd.d /usr/share/glvnd/egl_vendor.d
+if [[ ! -f /etc/vulkan/icd.d/nvidia_icd.json ]]; then
+  cp /root/autodl-tmp/RoboTwin/environment/4090_20261007/nvidia_icd.json /etc/vulkan/icd.d/nvidia_icd.json
+fi
+if [[ ! -f /usr/share/glvnd/egl_vendor.d/10_nvidia.json ]]; then
+  cp /root/autodl-tmp/RoboTwin/environment/4090_20261007/10_nvidia.json /usr/share/glvnd/egl_vendor.d/10_nvidia.json
+fi
 source /root/autodl-tmp/RoboTwin/scripts/activate_autodl.sh
 python scripts/verify_migration.py
 echo 'Run the render and policy warmup commands in MIGRATION_README.md next.'
