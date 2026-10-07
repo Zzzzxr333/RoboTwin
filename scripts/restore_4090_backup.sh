@@ -17,12 +17,17 @@ git -C /root/autodl-tmp/migration_git_restore remote set-url origin https://gith
 mv /root/autodl-tmp/migration_git_restore/.git /root/autodl-tmp/RoboTwin/.git
 rmdir /root/autodl-tmp/migration_git_restore
 git -C /root/autodl-tmp/RoboTwin reset --mixed HEAD
+git -C /root/autodl-tmp/RoboTwin restore --source HEAD --worktree .
 # The source archive already contains the submodule files; initialize Git metadata separately.
 git clone --no-checkout XPolicyLab.bundle /root/autodl-tmp/xpolicy_git_restore
 git -C /root/autodl-tmp/xpolicy_git_restore remote set-url origin https://github.com/Zzzzxr333/XPolicyLab.git
 mv /root/autodl-tmp/xpolicy_git_restore/.git /root/autodl-tmp/RoboTwin/XPolicyLab/.git
 rmdir /root/autodl-tmp/xpolicy_git_restore
 git -C /root/autodl-tmp/RoboTwin/XPolicyLab reset --mixed HEAD
+git -C /root/autodl-tmp/RoboTwin/XPolicyLab restore --source HEAD --worktree .
+if [[ ! -e /root/autodl-tmp/RoboTwin/XPolicyLab/policy/Pi_05/openpi/.venv ]]; then
+  ln -s /opt/pi05/.venv /root/autodl-tmp/RoboTwin/XPolicyLab/policy/Pi_05/openpi/.venv
+fi
 source /root/autodl-tmp/RoboTwin/scripts/activate_autodl.sh
 python scripts/verify_migration.py
 echo 'Run the render and policy warmup commands in MIGRATION_README.md next.'
