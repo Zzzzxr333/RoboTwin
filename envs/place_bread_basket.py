@@ -4,7 +4,7 @@ import sapien
 import math
 from copy import deepcopy
 import numpy as np
-
+import os
 
 class place_bread_basket(Base_Task):
 
@@ -12,6 +12,7 @@ class place_bread_basket(Base_Task):
         super()._init_task_env_(**kwargs)
 
     def load_actors(self):
+        variant = os.environ.get("BREAD_DATA_VARIANT", "default")
         rand_pos = rand_pose(
             xlim=[0.0, 0.0],
             ylim=[-0.2, -0.2],
@@ -34,12 +35,34 @@ class place_bread_basket(Base_Task):
         self.bread_id = []
 
         for i in range(2):
+            if variant == "orientation":
+    # 保持位置范围不变，但显著扩大面包朝向范围
+                xlim = [-0.27, 0.27]
+                ylim = [-0.2, 0.05]
+                rotate_lim = [0, np.pi, 0]
+
+            elif variant == "edge":
+    # 重点采左右工作区边缘；仍然不超出原始合法范围
+                if np.random.rand() < 0.5:
+                    xlim = [-0.27, -0.22]
+                else:
+                    xlim = [0.22, 0.27]
+
+                ylim = [-0.2, 0.05]
+                rotate_lim = [0, np.pi / 4, 0]
+
+            else:
+    # default / light 都保持你原来的位置与朝向分布
+                xlim = [-0.27, 0.27]
+                ylim = [-0.2, 0.05]
+                rotate_lim = [0, np.pi / 4, 0]
+
             rand_pos = rand_pose(
-                xlim=[-0.27, 0.27],
-                ylim=[-0.2, 0.05],
+                xlim=xlim,
+                ylim=ylim,
                 qpos=[0.707, 0.707, 0.0, 0.0],
                 rotate_rand=True,
-                rotate_lim=[0, np.pi / 4, 0],
+                rotate_lim=rotate_lim,
             )
             try_num = 0
             while True:
