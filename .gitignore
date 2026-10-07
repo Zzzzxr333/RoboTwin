@@ -30,3 +30,7 @@ envs/curobo/*
 
 /*.json*
 /*.txt
+
+# Local Pi0.5 runtime logs
+pi05_demo_long.log
+pi05_demo_run.log
